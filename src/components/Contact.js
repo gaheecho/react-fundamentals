@@ -1,4 +1,5 @@
 import React from 'react';
+import ReactDOM from 'react-dom';
 import ContactInfo from './ContactInfo';
 
 export default class Contact extends React.Component {
@@ -22,7 +23,8 @@ export default class Contact extends React.Component {
             }]
         };
 
-        this.handleChange = this.handleChange.bind(this)
+        this.handleChange = this.handleChange.bind(this);
+        this.handAddContact = this.handAddContact.bind(this);
     }
 
     /*
@@ -84,6 +86,11 @@ export default class Contact extends React.Component {
         })
     }
 
+    handAddContact(){
+      let newContact = ReactDOM.findDOMNode(this.refs.inputArea);
+      console.log(newContact);
+    }
+
     render() {
         const mapToComponents = (data) => {
             data.sort();
@@ -109,6 +116,11 @@ export default class Contact extends React.Component {
                     onChange={this.handleChange}
                 />
                 <div>{mapToComponents(this.state.contactData)}</div>
+                <div ref = 'inputArea'>
+                  <input id ="addName"/>
+                  <input id ="addPhonNo"/>
+                </div>
+                <button name = "addContactBtn" onClick = {this.handAddContact}>Add Contact!</button>
             </div>
         );
     }

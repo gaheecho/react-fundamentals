@@ -1,4 +1,5 @@
 import React from 'react';
+import ReacrDOM from 'react-dom';
 
 export default class ContactInfo extends React.Component {
   constructor(props){
@@ -51,6 +52,7 @@ export default class ContactInfo extends React.Component {
   DOM에서 마운트 해제되기 직전
   */
   componentWillUnmount () {
+    console.log('ContactInfo will Unmount..!');
   };
     render() {
         return (
