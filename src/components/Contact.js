@@ -1,12 +1,16 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+import update from 'react-addons-update'
 import ContactInfo from './ContactInfo';
+import ContactDetails from './ContactDetails';
+import ContactCreate from './ContactCreate';
 
 export default class Contact extends React.Component {
 
     constructor(props) {
         super(props);
         this.state = {
+          selectedKey: -1,
             keyword: '',
             contactData: [{
                 name: 'Abet',
@@ -23,8 +27,14 @@ export default class Contact extends React.Component {
             }]
         };
 
+        /*
+        임의의 메소드를 만들 땐 this와 바인딩을 해줘야함.
+        */
         this.handleChange = this.handleChange.bind(this);
-        this.handAddContact = this.handAddContact.bind(this);
+        this.handleClick = this.handleClick.bind(this);
+        this.handleCreate = this.handleCreate.bind(this);
+        this.handleRemove = this.handleRemove.bind(this);
+        this.handleEdit = this.handleEdit.bind(this);
     }
 
     /*
@@ -86,11 +96,40 @@ export default class Contact extends React.Component {
         })
     }
 
-    handAddContact(){
-      let newContact = ReactDOM.findDOMNode(this.refs.inputArea);
-      console.log(newContact);
+    handleClick(key){
+      this.setState({
+        selectedKey: key
+      });
+      console.log(key, 'is selected.');
     }
 
+    handleCreate(contact) {
+      this.setState({
+        contactData: update(this.state.contactData, { $push: [contact]})
+      });
+    }
+
+    handleRemove() {
+      this.setState({
+        contactData: update(this.state.contactData,
+          { $splice: [[this.state.selectedKey, 1]]}
+        ),
+        selectedKey: -1
+      });
+    }
+
+    handleEdit(name, phone){
+      this.setState({
+        contactData: update(this.state.contactData,
+          {
+            [this.state.selectedKey]: {
+              name: { $set: name},
+              phone: { $set: phone}
+            }
+          }
+        )
+      });
+    }
     render() {
         const mapToComponents = (data) => {
             data.sort();
@@ -102,7 +141,12 @@ export default class Contact extends React.Component {
                 );
             return data.map((contact, i) => {
                 console.log(contact, i);
-                return (<ContactInfo contact={contact} keyword = {this.state.keyword} key={i}/>);
+                return (<ContactInfo
+                            contact={contact}
+                            keyword = {this.state.keyword}
+                            key={i}
+                            onClick={()=>this.handleClick(i)}//네이티브 돔에만 적용됨.만든 컴포넌트에는 실행이 안됨.---->props로 전달되기 때문,하위 컴포넌트에 props로 전달해주면 하위컴포넌트에서 ㄴ사용가능
+                            />);
             });
         };
 
@@ -116,11 +160,12 @@ export default class Contact extends React.Component {
                     onChange={this.handleChange}
                 />
                 <div>{mapToComponents(this.state.contactData)}</div>
-                <div ref = 'inputArea'>
-                  <input id ="addName"/>
-                  <input id ="addPhonNo"/>
-                </div>
-                <button name = "addContactBtn" onClick = {this.handAddContact}>Add Contact!</button>
+                <ContactDetails
+                      isSelected={this.state.selectedKey != -1}
+                      contact={this.state.contactData[this.state.selectedKey]}/>
+                <ContactCreate
+                      onCreate={this.handleCreate}
+                      />
             </div>
         );
     }
