@@ -110,6 +110,9 @@ export default class Contact extends React.Component {
     }
 
     handleRemove() {
+      if(this.state.selectedKey < 0){
+        return;
+      }
       this.setState({
         contactData: update(this.state.contactData,
           { $splice: [[this.state.selectedKey, 1]]}
@@ -145,7 +148,7 @@ export default class Contact extends React.Component {
                             contact={contact}
                             keyword = {this.state.keyword}
                             key={i}
-                            onClick={()=>this.handleClick(i)}//네이티브 돔에만 적용됨.만든 컴포넌트에는 실행이 안됨.---->props로 전달되기 때문,하위 컴포넌트에 props로 전달해주면 하위컴포넌트에서 ㄴ사용가능
+                            onClick={()=>this.handleClick(i)}//커스텀 태그에서는 onClick이 적용되지 않음. 네이티브 돔에만 적용됨. 만든 컴포넌트에는 실행이 안됨. ----> props로 전달되기 때문,하위 컴포넌트에 props로 전달해주면 하위컴포넌트에서 사용가능
                             />);
             });
         };
@@ -162,7 +165,9 @@ export default class Contact extends React.Component {
                 <div>{mapToComponents(this.state.contactData)}</div>
                 <ContactDetails
                       isSelected={this.state.selectedKey != -1}
-                      contact={this.state.contactData[this.state.selectedKey]}/>
+                      contact={this.state.contactData[this.state.selectedKey]}
+                      onRemove={this.handleRemove}
+                      onEdit={this.handleEdit}/>
                 <ContactCreate
                       onCreate={this.handleCreate}
                       />

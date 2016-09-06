@@ -49,7 +49,7 @@ export default class ContactCreate extends React.Component {
               placeholder='phone'
               value={this.state.phone}
               onChange={this.handleChange}
-              />
+            />
         </p>
         <button onClick={this.handleClick}>Create</button>
       </div>
