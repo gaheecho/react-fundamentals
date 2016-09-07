@@ -12,6 +12,7 @@ export default class ContactDetails extends React.Component {
     this.handleToggle = this.handleToggle.bind(this);
     this.handleChange = this.handleChange.bind(this);
     this.handleEdit = this.handleEdit.bind(this);
+    this.handleKeyPress = this.handleKeyPress.bind(this);
   }
 
   handleToggle() {
@@ -39,8 +40,14 @@ export default class ContactDetails extends React.Component {
     this.props.onEdit(this.state.name, this.state.phone);
   }
 
-  render(){
+  handleKeyPress(e) {
+    if(e.charCode === 13) {// e.charCode === 13 : enter 라는 뜻.
+      this.handleToggle();
+    }
+  }
 
+  render(){
+    console.log('this.props', this.props);
     const details=(
       <div>
         <p>{this.props.contact.name}</p>
@@ -68,11 +75,14 @@ export default class ContactDetails extends React.Component {
             placeholder='phone'
             value={this.state.phone}
             onChange={this.handleChange}
+            onKeyPress={this.handleKeyPress}
           />
       </p>
       </div>
-    )
+    );
+
     const view = this.state.isEdit ? edit : details;
+
     const blank=(<div>Not Selected</div>);
 
     return (
@@ -93,12 +103,14 @@ ContactDetails.defaultProps = {
     name:'',
     phone:''
   },
-  onRemove: () =>{console.error('onRemove not defined.');},
-  onEdit: () =>{console.error('onEdit not defined.');}
+  onRemove: () =>{  console.error('onRemove not defined.'); },
+  onEdit: () =>{  console.error('onEdit not defined.'); },
+  isSelected: false
 }
 
 ContactDetails.propTypes = {
   contact: React.PropTypes.object,
   onRemove: React.PropTypes.func,
-  onEdit: React.PropTypes.func
+  onEdit: React.PropTypes.func,
+  isSelected: React.PropTypes.bool
 }

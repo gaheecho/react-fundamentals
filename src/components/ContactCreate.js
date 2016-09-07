@@ -9,6 +9,7 @@ export default class ContactCreate extends React.Component {
     }
     this.handleChange = this.handleChange.bind(this);
     this.handleClick = this.handleClick.bind(this);
+    this.handleKeyPress = this.handleKeyPress.bind(this);
   }
 
   handleChange(e) {
@@ -29,6 +30,14 @@ export default class ContactCreate extends React.Component {
       name: '',
       phone: ''
     });
+
+    this.nameInput.focus(); // ref는 꼭 ref에 접근하지 않고도 구현할 수 있으면 사용하지 않는 것이 좋음. focus 같은 경우는 ref쓰지 않고는 접근할 수 없어서 사용.
+  }
+
+  handleKeyPress(e) {
+    if(e.charCode === 13) {// e.charCode === 13 : enter 라는 뜻.
+      this.handleClick();
+    }
   }
 
   render() {
@@ -42,6 +51,7 @@ export default class ContactCreate extends React.Component {
             placeholder='name'
             value={this.state.name}
             onChange={this.handleChange}
+            ref={(ref) => { this.nameInput = ref }}
             />
             <input
               type='text'
@@ -49,6 +59,7 @@ export default class ContactCreate extends React.Component {
               placeholder='phone'
               value={this.state.phone}
               onChange={this.handleChange}
+              onKeyPress={this.handleKeyPress}
             />
         </p>
         <button onClick={this.handleClick}>Create</button>
