@@ -48,7 +48,20 @@ export default class Contact extends React.Component {
       최초 렌더링이 일어나기 직전, 컴포넌트가 Dom위에 만들어 지기 전에 실행되기 떄문에 Dom처리를 할 수 없음.
     */
     componentWillMount () {
+      /*
+        localStorage
+        html5부터 지원
+        서버로 전송되지 않음.
+        localStorage는 텍스트 형태로만 저장이 가능함.
+        객체는 JSON.stringify로 변환을 해주어야 함. 나중에 꺼내서 쓸 때는 JSON.parse로 다시 객체형태로 바꿔서 사용하면됨.
+      */
+      const contactData = localStorage.contactData;
 
+      if(contactData) {
+        this.setState({
+          contactData: JSON.parse(contactData)
+        });
+      }
     };
 
     /*
@@ -93,7 +106,9 @@ export default class Contact extends React.Component {
 
     */
     componentDidUpdate (prevProps, prevState) {
-
+      if(JSON.stringify(prevState.contactData) != JSON.stringify(this.state.contactData)) {
+        localStorage.contactData = JSON.stringify(this.state.contactData);
+      }
     };
     /*
       DOM에서 마운트 해제되기 직전
