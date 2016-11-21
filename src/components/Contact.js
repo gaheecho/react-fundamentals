@@ -74,7 +74,7 @@ export default class Contact extends React.Component {
     };
     /*
       업데이트 시, 컴포넌트가 새로운 props를 받았을 때 실행
-      props에 때라 state를 업데이트 할 떄 사용하면 유용
+      props에 때라 state를 업데이트 할 떄 사용하면 유용함.
       이 안에서 setState 해도 됨.
     */
     componentWillReceiveProps (nextProps) {
